@@ -22,7 +22,7 @@ var produtos = new List<Produto>
 
 app.MapGet("/", () =>
 {
-    return "API de Produtos funcionando!";
+    return "API de Produtos";
 });
 
 app.MapGet("/produtos", () =>
@@ -44,6 +44,16 @@ app.MapGet("/produtos/{id}", (int id) =>
 
 app.MapPost("/produtos", (Produto produto) =>
 {
+    if (produto.Preco < 0)
+    {
+        return Results.BadRequest("O preço não pode ser negativo.");
+    }
+
+    if (produto.Estoque < 0)
+    {
+        return Results.BadRequest("O estoque não pode ser negativo.");
+    }
+
     produto.Id = produtos.Count + 1;
     produtos.Add(produto);
 
@@ -52,6 +62,16 @@ app.MapPost("/produtos", (Produto produto) =>
 
 app.MapPut("/produtos/{id}", (int id, Produto produtoAtualizado) =>
 {
+    if (produtoAtualizado.Preco < 0)
+    {
+        return Results.BadRequest("O preço não pode ser negativo.");
+    }
+
+    if (produtoAtualizado.Estoque < 0)
+    {
+        return Results.BadRequest("O estoque não pode ser negativo.");
+    }
+
     var produto = produtos.FirstOrDefault(p => p.Id == id);
 
     if (produto == null)
